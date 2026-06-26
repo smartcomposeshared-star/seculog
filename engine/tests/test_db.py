@@ -97,7 +97,7 @@ def test_has_recent_alert_false_when_no_match():
 
 def test_has_recent_alert_false_when_alert_is_stale():
     client = FakeClient()
-    stale_time = (datetime.now(timezone.utc) - timedelta(minutes=30)).isoformat()
+    stale_time = (datetime.now(timezone.utc) - timedelta(minutes=90)).isoformat()
     client.store["alerts"].append({
         "id": "a2", "login_event_id": "e1", "rule_type": "brute_force",
         "username": "alice", "timestamp": stale_time,

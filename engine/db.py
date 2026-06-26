@@ -37,7 +37,7 @@ def insert_alerts(client, alerts, event_id_map):
     client.table("alerts").insert(rows).execute()
 
 
-def has_recent_alert(client, username, rule_type, within_minutes=15):
+def has_recent_alert(client, username, rule_type, within_minutes=60):
     cutoff = (datetime.now(timezone.utc) - timedelta(minutes=within_minutes)).isoformat()
     result = (
         client.table("alerts")
