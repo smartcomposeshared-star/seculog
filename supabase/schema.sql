@@ -18,5 +18,7 @@ create table alerts (
   "timestamp" timestamptz not null
 );
 
+alter table alerts add column username text not null default '';
+
 create index idx_alerts_username_rule on alerts (rule_type, timestamp);
 create index idx_login_events_username on login_events (username, timestamp);
