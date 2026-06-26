@@ -14,7 +14,7 @@ def geolocate_ip(ip_address, cache):
             result = (data.get("country"), data.get("lat"), data.get("lon"))
         else:
             result = (None, None, None)
-    except Exception:
+    except requests.RequestException:
         result = (None, None, None)
     cache[ip_address] = result
     return result
@@ -31,7 +31,7 @@ def check_ip_reputation(ip_address, api_key, cache):
             timeout=5,
         ).json()
         score = float(data["data"]["abuseConfidenceScore"])
-    except Exception:
+    except (requests.RequestException, KeyError, ValueError, TypeError):
         score = 0.0
     cache[ip_address] = score
     return score
@@ -46,5 +46,5 @@ def fetch_blacklisted_ip(api_key, fallback_ip="185.220.101.1"):
             timeout=5,
         ).json()
         return data["data"][0]["ipAddress"]
-    except Exception:
+    except (requests.RequestException, KeyError, IndexError, TypeError):
         return fallback_ip
