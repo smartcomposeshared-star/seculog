@@ -14,7 +14,7 @@ def geolocate_ip(ip_address, cache):
             result = (data.get("country"), data.get("lat"), data.get("lon"))
         else:
             result = (None, None, None)
-    except requests.RequestException:
+    except Exception:
         result = (None, None, None)
     cache[ip_address] = result
     return result
