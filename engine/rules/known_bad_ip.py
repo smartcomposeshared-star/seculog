@@ -1,7 +1,7 @@
-from engine.models import Alert
+from engine.models import Alert, LoginEvent
 
 
-def detect_known_bad_ip(events, ip_reputation, threshold=50.0):
+def detect_known_bad_ip(events: list[LoginEvent], ip_reputation: dict[str, float], threshold: float = 50.0) -> list[Alert]:
     alerts = []
     for event in events:
         score = ip_reputation.get(event.ip_address)
