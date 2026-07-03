@@ -15,7 +15,7 @@ export default async function AlertFeed() {
         <p className="text-gray-500">No alerts yet.</p>
       )}
       <div className="space-y-2">
-        {(alerts as Alert[]).map((alert) => (
+        {(alerts ?? []).map((alert: Alert) => (
           <div
             key={alert.id}
             className={`rounded border px-4 py-3 ${
