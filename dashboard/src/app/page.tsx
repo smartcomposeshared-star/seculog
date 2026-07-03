@@ -1,12 +1,10 @@
-import dynamicImport from "next/dynamic";
 import { supabase } from "@/lib/supabase";
 import SummaryCards from "@/components/SummaryCards";
 import AlertFeed from "@/components/AlertFeed";
+import LoginMapClient from "@/components/LoginMapClient";
 import type { MapLocation } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
-
-const LoginMap = dynamicImport(() => import("@/components/LoginMap"), { ssr: false });
 
 export default async function OverviewPage() {
   const [{ data: events }, { data: alertRows }] = await Promise.all([
@@ -38,7 +36,7 @@ export default async function OverviewPage() {
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-3">Login Locations</h2>
         <div className="rounded-lg overflow-hidden border border-gray-800">
-          <LoginMap locations={locations} />
+          <LoginMapClient locations={locations} />
         </div>
       </div>
       <AlertFeed />
