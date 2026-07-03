@@ -1,6 +1,12 @@
-import { supabase } from "@/lib/supabase";
+import SummaryCards from "@/components/SummaryCards";
 
-export default async function Page() {
-  const { data, error } = await supabase.from("login_events").select("id").limit(1);
-  return <pre className="p-4">{JSON.stringify({ data, error }, null, 2)}</pre>;
+export const dynamic = "force-dynamic";
+
+export default function OverviewPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-4">Overview</h1>
+      <SummaryCards />
+    </div>
+  );
 }
