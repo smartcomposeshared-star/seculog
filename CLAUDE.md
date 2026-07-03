@@ -10,56 +10,45 @@ Analyst, Infrastructure Operations). All services used are free-tier — no paid
 
 Full design: `docs/superpowers/specs/2026-06-24-seculog-design.md`
 Engine implementation plan: `docs/superpowers/plans/2026-06-24-seculog-detection-engine.md`
-(A second plan for the Next.js dashboard will be written after the engine is built.)
+Dashboard implementation plan: `docs/superpowers/plans/2026-07-03-seculog-dashboard.md`
 
-## Current status (as of this session)
+## Current status (as of 2026-07-04)
 
-**The detection engine (Tasks 1–11) is COMPLETE.** All 34 tests pass. HEAD: `bbd78cb`.
+**Both the detection engine AND the Next.js dashboard are COMPLETE.** HEAD: `9bec88c`.
 Progress ledger: `.superpowers/sdd/progress.md` — always check that file and `git log`
 before resuming, not this file's memory of state.
 
-### What's done
-- Task 0: Supabase project, AbuseIPDB API key, Discord webhook, GitHub repo, `.env` — done.
-- Task 1: `engine/` scaffolding + `supabase/schema.sql` — done (`fc17b6f`).
-- Task 2: `engine/models.py` (LoginEvent, Alert dataclasses) — done (`51825f7`).
-- Task 3: `engine/rules/brute_force.py` — done (`287aa20`).
-- Task 4: `engine/geo.py` + `engine/rules/impossible_travel.py` — done (`53a53fa`).
-- Task 5: `engine/rules/known_bad_ip.py` — done (`0a37284`).
-- Task 6: `engine/generator.py` — done (`254335e`).
-- Task 7: `engine/enrichment.py` (GeoIP + AbuseIPDB) — done (`f3b3631`).
-- Task 8: `engine/db.py` (Supabase module) — done (`0d96d34`).
-- Task 9: `engine/alerting.py` (Discord webhook) — done (`e81700d`).
-- Task 10: `engine/main.py` (orchestrator) — done (`96170f1`).
-- Task 11: `.github/workflows/run-engine.yml` (hourly cron) — done (`bbd78cb`).
+### Engine — fully done
+All Tasks 0–11 complete, 34 tests pass, hourly GitHub Actions cron verified running
+(workflow run #35 succeeded 2026-07-03). Discord alerts and Supabase rows confirmed.
 
-### Pending manual steps (Joy must do these before the engine works end-to-end)
+### Dashboard — code complete, Vercel deploy pending
+8 commits pushed (`fe7f158..9bec88c`). Files:
+- `dashboard/src/app/layout.tsx` — dark nav (Overview / All Events)
+- `dashboard/src/app/page.tsx` — Overview page (dynamic, fetches locations + alert IDs)
+- `dashboard/src/app/events/page.tsx` — All Events page (200 rows, newest first)
+- `dashboard/src/components/SummaryCards.tsx` — logins today / total alerts / by type
+- `dashboard/src/components/AlertFeed.tsx` — color-coded alert feed (red=high, yellow=medium)
+- `dashboard/src/components/LoginMap.tsx` — react-leaflet map (client component)
+- `dashboard/src/components/LoginMapClient.tsx` — ssr:false wrapper (required by Next.js 16)
+- `dashboard/src/components/EventsTable.tsx` — login events table
+- `dashboard/src/lib/supabase.ts` — Supabase client singleton
+- `dashboard/src/lib/types.ts` — LoginEvent, Alert, MapLocation
 
-1. **Apply the Supabase schema** — open Supabase SQL Editor, paste the full contents of
-   `supabase/schema.sql` and run it. This creates `login_events` and `alerts` tables
-   and adds the `username` column to `alerts`. Confirm both tables appear in Table Editor.
+### Pending manual step — Joy must do this
 
-2. **Run the engine once locally to verify** — with `.env` populated and venv active:
-   ```
-   .venv\Scripts\python -m engine.main
-   ```
-   Expected output: `Generated 17 events, 3 total alerts, 3 new alerts sent.`
-   Check Supabase Table Editor for new rows. Check Discord for 3 alert messages.
+**Deploy to Vercel:**
+1. Go to vercel.com → Add New → Project → import `smartcomposeshared-star/seculog`
+2. Root Directory → `dashboard`
+3. Add env vars: `SUPABASE_URL` and `SUPABASE_ANON_KEY` (anon public key from Supabase
+   Project Settings → API — different from the service_role key used by the engine)
+4. Deploy → verify live URL shows real data
 
-3. **Add GitHub Actions secrets** — repo → Settings → Secrets and variables → Actions.
-   Add all four: `SUPABASE_URL`, `SUPABASE_KEY`, `ABUSEIPDB_API_KEY`, `DISCORD_WEBHOOK_URL`
-   (same values as local `.env`).
+**Also:** update `dashboard/.env.local` with the real `SUPABASE_ANON_KEY` for local dev.
 
-4. **Push and trigger the workflow**:
-   ```
-   git push -u origin main
-   ```
-   Then on GitHub: Actions → "Run SecuLog Detection Engine" → Run workflow.
-   Verify the Actions run log shows the summary line and Supabase/Discord receive data.
+### What's next after Vercel is live
 
-### What's next after the engine is working
-
-Write a second plan for the Next.js dashboard (the UI half of the spec).
-See `docs/superpowers/specs/2026-06-24-seculog-design.md` for the Dashboard UI section.
+The project is complete. Add the live Vercel URL to the GitHub README and Joy's resume.
 
 ## Environment quirks to remember
 
@@ -75,6 +64,6 @@ See `docs/superpowers/specs/2026-06-24-seculog-design.md` for the Dashboard UI s
 ## How to resume
 
 1. Read `.superpowers/sdd/progress.md` and `git log --oneline` to confirm actual state.
-2. Ask Joy whether the 4 manual steps above are done.
-3. If engine manual steps are done → write the dashboard plan, then implement it.
-4. If not → help Joy through the manual steps first.
+2. Ask Joy whether Vercel deployment is done (the one remaining step).
+3. If yes → project is complete; help Joy add the URL to README and resume.
+4. If not → walk Joy through the Vercel deploy steps listed above.
