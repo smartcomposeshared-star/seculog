@@ -32,7 +32,7 @@ export default async function SummaryCards() {
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
       <div className="bg-gray-900 rounded-lg p-4">
         <p className="text-gray-400 text-sm mb-1">Logins Today</p>
-        <p className="text-3xl font-bold">{loginCount ?? 0}</p>
+        <p className="text-3xl font-bold text-white">{loginCount ?? 0}</p>
       </div>
       <div className="bg-gray-900 rounded-lg p-4">
         <p className="text-gray-400 text-sm mb-1">Total Alerts</p>
