@@ -12,11 +12,27 @@ Full design: `docs/superpowers/specs/2026-06-24-seculog-design.md`
 Engine implementation plan: `docs/superpowers/plans/2026-06-24-seculog-detection-engine.md`
 Dashboard implementation plan: `docs/superpowers/plans/2026-07-03-seculog-dashboard.md`
 
-## Current status (as of 2026-07-04)
+## Current status (as of 2026-07-10)
 
-**Both the detection engine AND the Next.js dashboard are COMPLETE.** HEAD: `9bec88c`.
+**PROJECT COMPLETE.** Engine, dashboard, Vercel deploy, and README are all done and
+live at https://seculog.vercel.app. HEAD: `62d2a3a`.
 Progress ledger: `.superpowers/sdd/progress.md` — always check that file and `git log`
 before resuming, not this file's memory of state.
+
+### Post-deploy fixes (2026-07-09/10)
+- Vercel deployed successfully (Root Directory `dashboard`, env vars `SUPABASE_URL` /
+  `SUPABASE_ANON_KEY` set to the anon public key).
+- Fixed: RLS was enabled on `alerts`/`login_events` with zero policies, so the anon key
+  got empty results everywhere even though the engine's data was there. Added public
+  SELECT policies for `anon` on both tables via Supabase SQL Editor (not yet reflected
+  in `supabase/schema.sql` — do that if touching the schema file again).
+- Fixed: "Logins Today" card text had no explicit color, invisible against dark card
+  background (`0402c6f`).
+- Changed: timestamps now render in Singapore time, `dd/mm/yyyy` format, via
+  `dashboard/src/lib/format.ts`; "Logins Today" boundary also aligned to SGT calendar
+  day instead of server UTC (`368c3b9`).
+- Added root `README.md` with live demo link, architecture, and local setup (`62d2a3a`).
+- `dashboard/.env.local` now has real Supabase anon key for local dev (gitignored).
 
 ### Engine — fully done
 All Tasks 0–11 complete, 34 tests pass, hourly GitHub Actions cron verified running
@@ -35,20 +51,9 @@ All Tasks 0–11 complete, 34 tests pass, hourly GitHub Actions cron verified ru
 - `dashboard/src/lib/supabase.ts` — Supabase client singleton
 - `dashboard/src/lib/types.ts` — LoginEvent, Alert, MapLocation
 
-### Pending manual step — Joy must do this
+### What's next
 
-**Deploy to Vercel:**
-1. Go to vercel.com → Add New → Project → import `smartcomposeshared-star/seculog`
-2. Root Directory → `dashboard`
-3. Add env vars: `SUPABASE_URL` and `SUPABASE_ANON_KEY` (anon public key from Supabase
-   Project Settings → API — different from the service_role key used by the engine)
-4. Deploy → verify live URL shows real data
-
-**Also:** update `dashboard/.env.local` with the real `SUPABASE_ANON_KEY` for local dev.
-
-### What's next after Vercel is live
-
-The project is complete. Add the live Vercel URL to the GitHub README and Joy's resume.
+Nothing required. Optional: add the live URL to Joy's resume (already in the README).
 
 ## Environment quirks to remember
 
@@ -63,7 +68,6 @@ The project is complete. Add the live Vercel URL to the GitHub README and Joy's 
 
 ## How to resume
 
-1. Read `.superpowers/sdd/progress.md` and `git log --oneline` to confirm actual state.
-2. Ask Joy whether Vercel deployment is done (the one remaining step).
-3. If yes → project is complete; help Joy add the URL to README and resume.
-4. If not → walk Joy through the Vercel deploy steps listed above.
+Project is complete. If Joy returns with a new request, read
+`.superpowers/sdd/progress.md` and `git log --oneline` to confirm current state before
+making changes — this file's memory can go stale.
