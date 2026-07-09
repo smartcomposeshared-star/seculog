@@ -1,8 +1,15 @@
 import { supabase } from "@/lib/supabase";
 
+const sgtDateFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Singapore",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
 export default async function SummaryCards() {
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
+  const todaySgt = sgtDateFormatter.format(new Date());
+  const todayStart = new Date(`${todaySgt}T00:00:00+08:00`);
 
   const [
     { count: loginCount },

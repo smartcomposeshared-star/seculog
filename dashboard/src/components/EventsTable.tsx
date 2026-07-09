@@ -1,3 +1,4 @@
+import { formatDateTime } from "@/lib/format";
 import type { LoginEvent } from "@/lib/types";
 
 export default function EventsTable({ events }: { events: LoginEvent[] }) {
@@ -20,7 +21,7 @@ export default function EventsTable({ events }: { events: LoginEvent[] }) {
               className="border-b border-gray-900 hover:bg-gray-900 transition-colors"
             >
               <td className="py-2 pr-6 font-mono text-gray-400 text-xs">
-                {new Date(e.timestamp).toLocaleString()}
+                {formatDateTime(e.timestamp)}
               </td>
               <td className="py-2 pr-6">{e.username}</td>
               <td className="py-2 pr-6 font-mono text-xs">{e.ip_address}</td>

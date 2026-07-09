@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { formatDateTime } from "@/lib/format";
 import type { Alert } from "@/lib/types";
 
 export default async function AlertFeed() {
@@ -26,7 +27,7 @@ export default async function AlertFeed() {
           >
             <div className="flex justify-between items-start">
               <span className="font-mono text-gray-300 text-sm">
-                {new Date(alert.timestamp).toLocaleString()}
+                {formatDateTime(alert.timestamp)}
               </span>
               <span
                 className={`text-xs font-bold uppercase tracking-wide ${
